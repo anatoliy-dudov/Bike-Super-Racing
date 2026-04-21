@@ -1,246 +1,493 @@
 # Bike Super Racing — Architecture Baseline
 
-## Purpose
-This document fixes the minimum architectural baseline for the MVP / vertical slice.
+## 1. Purpose
 
-It is not a full engine architecture document. Its purpose is to define the minimum runtime model that supports:
-- bootstrap;
-- main menu flow;
-- race flow;
-- timer;
-- countdown;
-- finish and result;
+This document fixes the mandatory architecture baseline for Bike Super Racing.
+
+It defines:
+- the first playable vertical MVP boundary;
+- the target runtime model;
+- mandatory project invariants;
+- growth rules from MVP to the wider game scope;
+- the production critical path.
+
+This document is mandatory for programmer and artist.
+
+---
+
+## 2. Project Identity
+
+### 2.1. Name
+- display name: `Bike Super Racing`;
+- technical name: `BikeSuperRacing`.
+
+### 2.2. Genre
+2D arcade competitive bike racing game.
+
+### 2.3. Core Reference
+Main reference: `Excite Bike`.
+
+### 2.4. Platform
+- Unity;
+- browser runtime;
+- target publishing platform: Yandex Games.
+
+---
+
+## 3. Product Baseline
+
+### 3.1. Core Fantasy
+The player enters a race quickly, feels control over the bike, clears a short readable track, sees a result immediately, and wants one more attempt to improve time.
+
+### 3.2. Main Product Bet
+The project is built around:
+- control feel;
+- readable track;
+- short retry loop;
 - fast restart;
-- local save;
-- leaderboard integration point;
-- growth without MVP overload.
+- competition through time improvement.
 
-## Product boundary
-MVP includes:
+### 3.3. Player Motivations
+- mastery;
+- competition;
+- short-session replayability.
+
+---
+
+## 4. Vertical MVP Boundary
+
+### 4.1. Must Have
+The nearest milestone is a vertical MVP containing:
 - 1 map: `map_01`;
 - 1 bike: `bike_01`;
+- 1 bike color: `color_red`;
 - 1 leaderboard: `leaderboard_map_01`;
 - 1 language;
 - local save;
 - cloud save stub;
-- start → race → finish → result → restart loop.
+- bootstrap;
+- basic menu flow;
+- countdown;
+- timer;
+- finish and result;
+- fast restart;
+- minimal HUD.
 
-Everything outside this boundary must not complicate the first implementation.
+### 4.2. Should Have
+Allowed only after the full Must Have loop is stable:
+- minor UI polish;
+- slightly richer result presentation;
+- extra visual polish that does not affect readability or schedule.
 
-## Mandatory scenes
-- `00_Bootstrap`;
-- `01_MainMenu`;
-- `02_Race`;
-- `90_TestGameplay`;
-- `91_TestUI`.
+### 4.3. Later
+Outside the current milestone:
+- full 3-map implementation;
+- second bike;
+- full 5-color selection in UI;
+- multi-language support;
+- full cloud save integration;
+- daily rewards implementation;
+- monetization;
+- multiplayer;
+- backend systems.
 
-## Runtime entry model
-### `00_Bootstrap`
+Everything outside Must Have must not complicate the first implementation.
+
+---
+
+## 5. Full Target Product Growth
+
+The architecture must support future growth to:
+- 3 maps;
+- 2 bikes;
+- 5 bike colors:
+  - `color_red`
+  - `color_yellow`
+  - `color_black`
+  - `color_purple`
+  - `color_pink`;
+- one leaderboard per map;
+- audio settings;
+- language switching;
+- daily reward system;
+- future platform integration.
+
+This growth must happen without rewriting the base architecture.
+
+---
+
+## 6. Mandatory Invariants
+
+### 6.1. Data-Driven Core
+Even with one map, one bike, and one color, runtime entities must come from configs, not hardcoded ad hoc logic.
+
+### 6.2. One Naming Baseline
+All names must stay synchronized across:
+- code;
+- assets;
+- scenes;
+- configs;
+- prefabs;
+- documentation.
+
+### 6.3. Platform Isolation
+Gameplay must not depend directly on platform SDK calls.
+
+### 6.4. Save Isolation
+UI and gameplay must not know the concrete persistence implementation.
+
+### 6.5. UI Isolation
+UI presents state and data. UI does not own gameplay truth.
+
+### 6.6. Growth Without Rebuild
+Adding a second map, second bike, extra colors, or extra leaderboard IDs must not require a redesign of the runtime core.
+
+---
+
+## 7. Canonical MVP Registry
+
+### 7.1. Scene Names
+- `00_Bootstrap`
+- `01_MainMenu`
+- `02_Race`
+- `90_TestGameplay`
+- `91_TestUI`
+
+### 7.2. IDs
+- `map_01`
+- `bike_01`
+- `color_red`
+- `leaderboard_map_01`
+
+### 7.3. Config Names
+- `CFG_Game_Main`
+- `CFG_Map_Map01`
+- `CFG_Bike_Bike01`
+- `CFG_Color_Red`
+
+### 7.4. Domain Entities
+- `MapDefinition`
+- `BikeDefinition`
+- `BikeColorDefinition`
+- `PlayerProfile`
+- `RaceSession`
+- `RaceResult`
+- `GameConfig`
+
+### 7.5. Service Contracts
+- `IAppStateService`
+- `ISceneLoader`
+- `IConfigService`
+- `IPlayerProfileService`
+- `ISaveService`
+- `ILeaderboardService`
+- `IRaceSessionService`
+- `IRaceTimerService`
+- `ICountdownService`
+- `IRaceResultService`
+- `IAudioSettingsService`
+- `ILocalizationService`
+- `ITimeService`
+
+### 7.6. Base Runtime Implementations
+- `Bootstrapper`
+- `SceneLoader`
+- `AppStateService`
+- `ConfigService`
+- `PlayerProfileService`
+- `LocalSaveService`
+- `CloudSaveStubService`
+- `TimeService`
+
+### 7.7. Base UI Components
+- `MainMenuScreen`
+- `SettingsPopup`
+- `LeaderboardPopup`
+- `RaceHudView`
+- `CountdownWidget`
+- `ResultPanel`
+
+---
+
+## 8. Layered Architecture
+
+The project uses layered modular architecture.
+
+### 8.1. `Bootstrap`
 Responsibilities:
-- initialize core services;
-- register config sources;
-- initialize save layer;
-- initialize localization layer;
-- initialize audio settings layer;
-- prepare app state;
-- route player to `01_MainMenu`.
+- application entry;
+- service initialization;
+- config registration;
+- startup routing.
 
-### `01_MainMenu`
+### 8.2. `Core`
 Responsibilities:
-- expose main menu entry points;
-- allow entry into race flow;
-- allow leaderboard/settings access;
-- read player profile and display current available shell state.
+- interfaces;
+- shared abstractions;
+- common primitives;
+- state machine helpers.
 
-### `02_Race`
+### 8.3. `Domain`
+Responsibilities:
+- game entities;
+- config models;
+- player profile model;
+- race session and race result model.
+
+### 8.4. `Application`
+Responsibilities:
+- use cases;
+- orchestration;
+- facades;
+- coordination between layers.
+
+### 8.5. `Infrastructure`
+Responsibilities:
+- local save;
+- cloud save stub;
+- leaderboard implementation;
+- audio;
+- localization;
+- time provider;
+- future platform bridge.
+
+### 8.6. `Gameplay`
+Responsibilities:
+- bike runtime;
+- map runtime;
+- countdown;
+- timer;
+- finish;
+- race flow;
+- restart flow.
+
+### 8.7. `UI`
+Responsibilities:
+- screens;
+- popups;
+- widgets;
+- HUD;
+- result presentation.
+
+---
+
+## 9. Dependency Rules
+
+Allowed dependencies:
+- `Application` depends on `Core` and `Domain`;
+- `Infrastructure` depends on `Core` and `Domain`;
+- `Gameplay` depends on `Core`, `Domain`, `Application`;
+- `UI` depends on `Core` and `Application`;
+- `Bootstrap` depends on `Application`, `Infrastructure`, `UI`.
+
+Forbidden dependencies:
+- `Domain` -> `Infrastructure`;
+- `Domain` -> `UI`;
+- `UI` -> concrete save implementations;
+- `Gameplay` -> platform SDK directly;
+- `UI` -> platform SDK directly.
+
+---
+
+## 10. Scene Baseline
+
+### 10.1. `00_Bootstrap`
+Responsibilities:
+- initialize runtime context;
+- initialize services;
+- load config references;
+- load player profile;
+- route to `01_MainMenu`.
+
+### 10.2. `01_MainMenu`
+Responsibilities:
+- main entry point;
+- start race flow;
+- show settings access;
+- show leaderboard access;
+- keep visible placeholders for Garage and Daily Rewards without implementing full systems in MVP.
+
+### 10.3. `02_Race`
 Responsibilities:
 - create race session;
-- spawn bike and map for current selection;
-- manage countdown, timer and finish;
-- show result;
+- load `map_01`;
+- spawn `bike_01`;
+- apply `color_red`;
+- run countdown;
+- run timer;
+- detect finish;
+- create result;
 - allow restart or exit.
 
-## Core architectural principle
-The MVP implementation must follow this rule:
+### 10.4. `90_TestGameplay`
+Responsibilities:
+- isolated gameplay validation.
 
-**state flow and gameplay flow are first-class citizens; decorative systems are not.**
+### 10.5. `91_TestUI`
+Responsibilities:
+- isolated UI validation.
 
-This means:
-- race state transitions must be explicit;
-- timer and result must have one source of truth;
-- restart must reset all required systems predictably;
-- UI must react to state, not invent state.
+---
 
-## Domain layer
-Mandatory domain entities:
-- `MapDefinition`;
-- `BikeDefinition`;
-- `BikeColorDefinition`;
-- `PlayerProfile`;
-- `RaceSession`;
-- `RaceResult`;
-- `GameConfig`.
+## 11. User Flow Model
 
-### Intent of each entity
-- `MapDefinition` — static map metadata and references for one playable map;
-- `BikeDefinition` — bike identity, references and basic gameplay parameters;
-- `BikeColorDefinition` — player-facing bike color selection metadata;
-- `PlayerProfile` — current player selections and best local results;
-- `RaceSession` — runtime data for one active race attempt;
-- `RaceResult` — immutable output of one completed attempt;
-- `GameConfig` — root references and global settings used by the app.
+The first playable version must support this flow:
+1. start game;
+2. load `00_Bootstrap`;
+3. route to `01_MainMenu`;
+4. press race start;
+5. auto-select `map_01`;
+6. auto-select `bike_01`;
+7. auto-apply `color_red`;
+8. load `02_Race`;
+9. run 5-second countdown;
+10. open control and timer together;
+11. finish race;
+12. show time;
+13. save result;
+14. show best local result and leaderboard entry point;
+15. allow fast restart.
 
-## Service baseline
-### Required service contracts
-- `IAppStateService` — global app state routing;
-- `ISceneLoader` — scene transitions;
-- `IConfigService` — load and expose config assets;
-- `IPlayerProfileService` — current player-facing data and selections;
-- `ISaveService` — local persistence abstraction;
-- `ILeaderboardService` — leaderboard write/read abstraction;
-- `IRaceSessionService` — current race session orchestration;
-- `IRaceTimerService` — race timer control and access;
-- `ICountdownService` — countdown sequence orchestration;
-- `IRaceResultService` — finish processing and result building;
-- `IAudioSettingsService` — sound/music settings abstraction;
-- `ILocalizationService` — text localization abstraction;
-- `ITimeService` — general time provider.
+---
 
-### Required infrastructure implementations for MVP
-- `SceneLoader`;
-- `AppStateService`;
-- `ConfigService`;
-- `PlayerProfileService`;
+## 12. Save, Leaderboard, and Localization Contracts
+
+### 12.1. Save Baseline
+Mandatory implementations:
 - `LocalSaveService`;
-- `CloudSaveStubService`;
-- `TimeService`.
+- `CloudSaveStubService`.
 
-## Recommended state model
-### App-level states
-Minimum app flow:
-- Bootstrap;
-- MainMenu;
-- Race;
-- Pause;
-- Result.
+`CloudSaveStubService` exists as a future extension point and must not block MVP.
 
-### Race-level states
-Minimum race states:
-- `EnterRaceScene`;
-- `PreStart`;
-- `Countdown`;
-- `RaceActive`;
-- `RaceFinished`;
-- `ResultPresentation`;
-- `RestartRequested`.
-
-These states must be explicit. Avoid hidden state spread across unrelated MonoBehaviours.
-
-## Race session baseline
-A race session must minimally store:
-- selected map ID;
-- selected bike ID;
-- selected color ID;
-- session start marker;
-- timer running state;
-- finish state;
-- final race time.
-
-Recommended canonical selections for MVP default flow:
-- map: `map_01`;
-- bike: `bike_01`;
-- color: `color_red`.
-
-## Result model baseline
-A race result must minimally contain:
-- map ID;
-- bike ID;
-- color ID;
-- total time;
-- timestamp or save marker;
-- `isNewBest` flag for local comparison.
-
-The result model should be serializable without coupling to UI.
-
-## Save baseline
 Local save must persist at minimum:
 - selected bike;
 - selected color;
-- best result for `map_01`;
-- user settings needed for audio or minimal shell state.
+- best local time for `map_01`;
+- audio settings.
 
-Cloud save is a stub in MVP and must not block release.
+### 12.2. Leaderboard Baseline
+The architecture must support a dedicated map leaderboard key:
+- `leaderboard_map_01`.
 
-## Leaderboard baseline
-Leaderboard implementation must support:
-- submitting result for `leaderboard_map_01`;
-- reading leaderboard for `map_01`;
-- failing gracefully when leaderboard backend is unavailable.
+For MVP, a local-first implementation is acceptable as long as the project keeps `ILeaderboardService` as the integration point.
 
-If platform integration is not finished, code must allow local development without hard dependency on the live leaderboard backend.
+### 12.3. Localization Baseline
+MVP supports one language.
+Even with one language, strings must go through `ILocalizationService` and localization keys.
 
-## UI architecture baseline
-UI must stay thin.
+### 12.4. Audio Baseline
+Mandatory settings:
+- music volume;
+- SFX volume.
 
-Mandatory runtime UI classes:
-- `MainMenuScreen`;
-- `SettingsPopup`;
-- `LeaderboardPopup`;
-- `RaceHudView`;
-- `CountdownWidget`;
-- `ResultPanel`.
+They must be stored through the player profile and save layer.
 
-### UI rule
-UI listens to state and displays data.
-UI must not own gameplay truth.
+---
 
-This is especially important for:
-- race timer;
-- finish state;
-- result generation;
-- restart logic.
+## 13. Minimal Config Baseline
 
-## Config baseline
-The following config assets are mandatory:
-- `CFG_Game_Main`;
-- `CFG_Map_Map01`;
-- `CFG_Bike_Bike01`;
-- `CFG_Color_Red`.
+Mandatory config assets:
+- `CFG_Game_Main`
+- `CFG_Map_Map01`
+- `CFG_Bike_Bike01`
+- `CFG_Color_Red`
 
-### Expected config intent
-- `CFG_Game_Main` — root references and global settings;
-- `CFG_Map_Map01` — map data, scene/prefab references, leaderboard key;
-- `CFG_Bike_Bike01` — bike references and baseline stats;
-- `CFG_Color_Red` — visual selection data for bike presentation.
+### 13.1. Required `MapDefinition` Fields
+- `Id`
+- `DisplayName`
+- `SceneName`
+- `LeaderboardId`
+- `IsEnabled`
 
-## Dependency rules
-1. Domain must not depend on UI.
-2. UI must not calculate gameplay truth.
-3. Infrastructure may implement service contracts but must not rename them.
-4. Restart flow must reset gameplay state through service orchestration, not through scattered ad hoc object mutations.
-5. New services must be justified by clear responsibility, not created per screen or per temporary feature.
+### 13.2. Required `BikeDefinition` Fields
+- `Id`
+- `DisplayName`
+- `Acceleration`
+- `MaxSpeed`
+- `Handling`
+- `IsEnabled`
 
-## Explicit non-goals for MVP architecture
-The first implementation does not need:
-- deep economy systems;
-- inventory systems;
-- live-ops framework;
-- multi-mode architecture;
-- generalized content pipeline for many tracks before MVP works;
-- heavy abstraction for hypothetical future systems.
+### 13.3. Required `BikeColorDefinition` Fields
+- `Id`
+- `DisplayName`
+- `ColorHex`
+- `IsEnabled`
 
-## Minimum technical checklist for first production pass
-- scene bootstrap works;
-- menu enters race;
-- race session starts correctly;
-- countdown is synchronized with control opening and timer start;
-- finish event stops timer correctly;
-- result object is created correctly;
-- best local time comparison works;
-- restart resets race deterministically;
-- exit returns to menu cleanly.
+---
 
-## Baseline rule for future changes
-If a new feature changes scene flow, naming, runtime state, save schema, leaderboard schema or config schema, this document and `Docs/architecture/naming-convention.md` must be updated first.
+## 14. Critical Path for Production
 
-This file is the minimum architecture contract for the MVP phase.
+The current production critical path is:
+1. project baseline and bootstrap;
+2. menu flow;
+3. race flow;
+4. countdown;
+5. timer;
+6. finish and result;
+7. restart;
+8. local save;
+9. minimal HUD;
+10. QA validation of the full vertical loop.
+
+Anything outside this path must not delay MVP.
+
+---
+
+## 15. First Vertical MVP Acceptance Criteria
+
+The first playable vertical MVP is accepted when:
+- project starts from `00_Bootstrap`;
+- routes cleanly to `01_MainMenu`;
+- race starts from menu;
+- `RaceSession` is created correctly;
+- countdown and timer are synchronized with control opening;
+- finish stops the timer once;
+- `RaceResult` is created correctly;
+- best local time is saved;
+- audio settings are saved;
+- restart resets race state deterministically;
+- all names follow canonical naming baseline.
+
+---
+
+## 16. Implementation Order
+
+Implementation must follow this order:
+1. repository and Unity structure;
+2. scenes;
+3. asmdef;
+4. naming baseline;
+5. domain models;
+6. service interfaces;
+7. bootstrap;
+8. configs;
+9. profile and save;
+10. main menu;
+11. race;
+12. countdown and timer;
+13. finish and result;
+14. local leaderboard;
+15. polish inside MVP scope only.
+
+Skipping to content expansion or post-MVP systems before this order is complete is not allowed.
+
+---
+
+## 17. Mandatory Baseline Documents
+
+The following files are mandatory and authoritative:
+- `Docs/architecture/naming-convention.md`
+- `Docs/architecture/project-structure.md`
+- `Docs/architecture/architecture-baseline.md`
+- `Docs/art/art-direction-mvp.md`
+- `Docs/art/asset-list-mvp.md`
+
+If implementation conflicts with these documents, the documents are considered correct until they are explicitly updated.
+
+---
+
+## 18. Change Rule
+
+If a new feature changes naming, scene flow, runtime state, save schema, leaderboard schema, or config schema, the baseline documents must be updated first.
+
+Breaking this rule is an architectural error.
