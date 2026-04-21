@@ -19,6 +19,7 @@ Small game
 - [Core Gameplay Loop](Docs/design/core-gameplay-loop.md)
 - [Onboarding & Teaching Strategy](Docs/design/onboarding-teaching-strategy.md)
 - [Race Flow & HUD](Docs/design/race-flow-and-hud.md)
+- [Result Screen & Restart Loop](Docs/design/result-screen-and-restart-loop.md)
 - [MVP Scope & Feature Priority Matrix](Docs/design/mvp-scope-and-feature-priority-matrix.md)
 
 ## Current MVP focus
