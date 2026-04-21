@@ -23,8 +23,7 @@ Bike-Super-Racing/
 ├── Docs/
 │   ├── architecture/
 │   ├── art/
-│   ├── technical-design/
-│   ├── product/
+│   ├── design/
 │   └── release/
 ├── GameClient/
 │   ├── Assets/
@@ -54,8 +53,7 @@ Bike-Super-Racing/
 Docs/
 ├── architecture/
 ├── art/
-├── technical-design/
-├── product/
+├── design/
 └── release/
 ```
 
@@ -81,23 +79,16 @@ Current mandatory files:
 - `art-direction-mvp.md`
 - `asset-list-mvp.md`
 
-### 3.3. `Docs/technical-design/`
-Contains implementation-level technical documents.
+### 3.3. `Docs/design/`
+Contains design and UX documents used by the project.
 
 Examples:
-- `race-flow.md`
-- `save-system.md`
-- `leaderboards.md`
+- `game-vision.md`
+- `core-gameplay-loop.md`
+- `race-flow-and-hud.md`
+- `mvp-scope-and-feature-priority-matrix.md`
 
-### 3.4. `Docs/product/`
-Contains product and UX documents.
-
-Examples:
-- `vision.md`
-- `mvp-scope.md`
-- `screen-flow.md`
-
-### 3.5. `Docs/release/`
+### 3.4. `Docs/release/`
 Contains release checklist, build notes, and publication instructions.
 
 ---
@@ -178,7 +169,7 @@ Responsibilities:
 ### 5.6. `Gameplay/`
 Responsibilities:
 - bike controller;
-- track runtime;
+- map runtime;
 - countdown;
 - timer;
 - finish;
@@ -306,7 +297,7 @@ Gameplay/
 ├── Countdown/
 ├── Timer/
 ├── Finish/
-├── Track/
+├── Map/
 └── Spawn/
 ```
 
