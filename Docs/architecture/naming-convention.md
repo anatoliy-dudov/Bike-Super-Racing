@@ -1,139 +1,425 @@
 # Bike Super Racing — Naming Convention
 
-## Purpose
-This document fixes the canonical naming baseline for code, content, scenes, configs, IDs, prefabs, UI and documentation.
+## 1. Purpose
 
-The goal is to avoid parallel names for the same entity and to ensure that design, code, content and documentation use one shared vocabulary.
+This document defines the mandatory naming baseline for Bike Super Racing.
 
-## Core rules
-1. One gameplay entity must have one canonical name.
-2. Documentation names, config names, code names, prefab names and UI labels must describe the same entity without alternative synonyms.
-3. New entities must be added to this document before they are created in code or content.
-4. IDs use `snake_case`.
-5. Class names use `PascalCase`.
-6. Interfaces use `I` prefix and `PascalCase`.
-7. Scene names use numeric prefix plus `PascalCase` name.
-8. Config assets use `CFG_` prefix.
-9. Prefabs use `PREF_` prefix.
-10. Sprites use `SPR_` prefix.
-11. Music clips use `MUS_` prefix.
-12. Sound effects use `SFX_` prefix.
-13. Materials use `MAT_` prefix.
-14. Animation clips and controllers use `AN_` prefix.
-15. Alternative names for the same entity are forbidden in code, UI, assets and documentation.
+It is the single source of truth for naming in:
+- code;
+- scenes;
+- ScriptableObject configs;
+- prefabs;
+- sprites;
+- audio assets;
+- materials;
+- animations;
+- UI assets;
+- documentation.
 
-## Canonical scene names
-- `00_Bootstrap` — service bootstrap and app initialization scene;
-- `01_MainMenu` — main menu, entry flow, garage entry point, leaderboard entry point, settings entry point;
-- `02_Race` — active race scene for playable track session;
-- `90_TestGameplay` — isolated gameplay test scene;
-- `91_TestUI` — isolated UI test scene.
+If a name is not fixed in this document, it must not be introduced into the project before this document is updated.
 
-## Canonical IDs for MVP
-- `map_01` — first playable track for MVP;
-- `bike_01` — first playable bike for MVP;
-- `color_red` — first canonical bike color for MVP;
-- `leaderboard_map_01` — leaderboard key for the first playable track.
+---
 
-## Canonical config names
-- `CFG_Game_Main` — root game configuration;
-- `CFG_Map_Map01` — config for `map_01`;
-- `CFG_Bike_Bike01` — config for `bike_01`;
-- `CFG_Color_Red` — config for `color_red`.
+## 2. Global Rules
 
-## Canonical domain entities
-- `MapDefinition`;
-- `BikeDefinition`;
-- `BikeColorDefinition`;
-- `PlayerProfile`;
-- `RaceSession`;
-- `RaceResult`;
-- `GameConfig`.
+### 2.1. General Rules
+- all technical names use English only;
+- Cyrillic is forbidden in technical names;
+- spaces are forbidden in technical names;
+- one entity must have one canonical name;
+- the same entity must use the same name in code, content, and documentation;
+- a new entity is fixed in this document first, then created in the project.
 
-## Canonical services
-- `IAppStateService`;
-- `ISceneLoader`;
-- `IConfigService`;
-- `IPlayerProfileService`;
-- `ISaveService`;
-- `ILeaderboardService`;
-- `IRaceSessionService`;
-- `IRaceTimerService`;
-- `ICountdownService`;
-- `IRaceResultService`;
-- `IAudioSettingsService`;
-- `ILocalizationService`;
-- `ITimeService`.
+### 2.2. Technical Names Include
+- class names;
+- interface names;
+- method names;
+- property names;
+- scene names;
+- prefab names;
+- sprite names;
+- config names;
+- entity IDs;
+- folder names;
+- localization keys;
+- ScriptableObject names.
 
-## Canonical runtime classes
-- `Bootstrapper`;
-- `SceneLoader`;
-- `AppStateService`;
-- `ConfigService`;
-- `PlayerProfileService`;
-- `LocalSaveService`;
-- `CloudSaveStubService`;
-- `TimeService`.
+---
 
-## Canonical UI classes
-- `MainMenuScreen`;
-- `SettingsPopup`;
-- `LeaderboardPopup`;
-- `RaceHudView`;
-- `CountdownWidget`;
-- `ResultPanel`.
+## 3. Code Style
 
-## Asset naming rules
-### Scenes
-- `00_Bootstrap.unity`;
-- `01_MainMenu.unity`;
-- `02_Race.unity`;
-- `90_TestGameplay.unity`;
-- `91_TestUI.unity`.
+### 3.1. C# Naming Rules
+- classes: PascalCase;
+- interfaces: PascalCase with `I` prefix;
+- methods: PascalCase;
+- public properties: PascalCase;
+- private fields: `_camelCase`;
+- local variables: `camelCase`;
+- enums: PascalCase;
+- enum values: PascalCase.
 
-### Prefabs
-- `PREF_MainMenuScreen`;
-- `PREF_RaceHudView`;
-- `PREF_CountdownWidget`;
-- `PREF_ResultPanel`;
-- `PREF_Bike_Bike01`;
-- `PREF_Map_Map01`.
+### 3.2. ID Rules
+- lowercase only;
+- words separated by `_`;
+- no spaces;
+- no dashes;
+- short and predictable format.
 
-### Sprites
-- `SPR_UI_Button_Primary`;
-- `SPR_UI_Panel_Result`;
-- `SPR_Bike_Bike01_Idle`;
-- `SPR_Map_Map01_Tile_01`.
+Examples:
+- `map_01`;
+- `bike_01`;
+- `color_red`;
+- `leaderboard_map_01`.
 
-### Audio
-- `MUS_Menu_MainLoop`;
-- `MUS_Race_Loop_01`;
-- `SFX_Countdown_Beep`;
-- `SFX_Race_Finish`;
-- `SFX_UI_Click`.
+---
 
-### Animation
-- `AN_Bike_Bike01_Idle`;
-- `AN_Countdown_Pulse`;
-- `AN_ResultPanel_Show`.
+## 4. Canonical Project Names
 
-## UI text vs internal names
-Player-facing labels may be localized and readable for players.
-Internal names must remain canonical and stable.
+### 4.1. Project Name
+- display name: `Bike Super Racing`;
+- technical name: `BikeSuperRacing`.
 
-Example:
-- internal map ID: `map_01`;
-- internal config: `CFG_Map_Map01`;
-- internal prefab: `PREF_Map_Map01`;
-- player-facing label: `Map 1` or localized equivalent.
+### 4.2. Canonical Scene Names
+- `00_Bootstrap`
+- `01_MainMenu`
+- `02_Race`
+- `90_TestGameplay`
+- `91_TestUI`
 
-## Forbidden patterns
-- using `Track01`, `Level1`, `RaceMap1` and `map_01` for the same entity;
-- using `PlayerBike`, `Bike01`, `Moto01` and `bike_01` in parallel;
-- naming one service by domain and another by screen-specific wording for the same responsibility;
-- changing labels in documentation without changing code references and configs.
+### 4.3. Canonical MVP IDs
+- `map_01`
+- `bike_01`
+- `color_red`
+- `leaderboard_map_01`
 
-## Change management
-Any new map, bike, color, service, UI screen, config or leaderboard key must be added here first, then created in code and content.
+### 4.4. Reserved Future IDs
+- maps: `map_02`, `map_03`, ...;
+- bikes: `bike_02`, `bike_03`, ...;
+- colors: `color_yellow`, `color_black`, `color_purple`, `color_pink`, ...;
+- leaderboards: `leaderboard_map_02`, `leaderboard_map_03`, ... .
 
-This file is the source of truth for naming across the project.
+---
+
+## 5. Canonical Domain Entities
+
+The project uses the following canonical domain names:
+- `MapDefinition`
+- `BikeDefinition`
+- `BikeColorDefinition`
+- `PlayerProfile`
+- `RaceSession`
+- `RaceResult`
+- `GameConfig`
+
+Forbidden alternatives:
+- `TrackDefinition` instead of `MapDefinition`;
+- `MotorcycleDefinition` instead of `BikeDefinition`;
+- `UserProfile` instead of `PlayerProfile`;
+- `RaceData` instead of `RaceSession` or `RaceResult`.
+
+---
+
+## 6. Canonical Services
+
+The project uses the following canonical service names:
+- `IAppStateService`
+- `ISceneLoader`
+- `IConfigService`
+- `IPlayerProfileService`
+- `ISaveService`
+- `ILeaderboardService`
+- `IRaceSessionService`
+- `IRaceTimerService`
+- `ICountdownService`
+- `IRaceResultService`
+- `IAudioSettingsService`
+- `ILocalizationService`
+- `ITimeService`
+
+### 6.1. Canonical Runtime Implementations
+- `Bootstrapper`
+- `SceneLoader`
+- `AppStateService`
+- `ConfigService`
+- `PlayerProfileService`
+- `LocalSaveService`
+- `CloudSaveStubService`
+- `TimeService`
+
+Additional implementations are allowed only if the name clearly reflects real responsibility.
+
+Examples:
+- `LocalLeaderboardService`;
+- `YandexLeaderboardService`;
+- `JsonLocalSaveService`.
+
+---
+
+## 7. Canonical UI Classes
+
+The project uses the following canonical UI classes:
+- `MainMenuScreen`
+- `SettingsPopup`
+- `LeaderboardPopup`
+- `RaceHudView`
+- `CountdownWidget`
+- `ResultPanel`
+
+Forbidden alternatives without updating this document:
+- `MainScreen` instead of `MainMenuScreen`;
+- `OptionsPopup` instead of `SettingsPopup`;
+- `HudView` instead of `RaceHudView`.
+
+---
+
+## 8. Canonical Config Names
+
+The following configs are fixed for MVP:
+- `CFG_Game_Main`
+- `CFG_Map_Map01`
+- `CFG_Bike_Bike01`
+- `CFG_Color_Red`
+
+### 8.1. Future Config Patterns
+- maps: `CFG_Map_Map02`, `CFG_Map_Map03`, ...;
+- bikes: `CFG_Bike_Bike02`, ...;
+- colors: `CFG_Color_Yellow`, `CFG_Color_Black`, `CFG_Color_Purple`, `CFG_Color_Pink`, ...;
+- leaderboard configs if needed: `CFG_Leaderboard_Map01`, ...;
+- UI configs: `CFG_UI_MainMenu`, ...;
+- audio configs: `CFG_Audio_Main`.
+
+---
+
+## 9. Asset Naming Rules
+
+### 9.1. Mandatory Prefixes
+- `PREF_` — prefab;
+- `SPR_` — sprite;
+- `MUS_` — music;
+- `SFX_` — sound effect;
+- `MAT_` — material;
+- `AN_` — animation;
+- `CFG_` — config.
+
+### 9.2. Prefab Pattern
+Format:
+`PREF_[Category]_[Name]`
+
+Examples:
+- `PREF_Bike_Bike01`
+- `PREF_UI_MainMenuScreen`
+- `PREF_UI_ResultPanel`
+
+### 9.3. Sprite Pattern
+Format:
+`SPR_[Category]_[Name]`
+
+Examples:
+- `SPR_Bike_Bike01_Body`
+- `SPR_Bike_Bike01_WheelFront`
+- `SPR_Bike_Bike01_WheelRear`
+- `SPR_Rider_Bike01_Base`
+- `SPR_Map_Map01_Tile_Ground_A`
+- `SPR_Map_Map01_BG_Sky`
+- `SPR_Map_Map01_FinishBanner`
+- `SPR_UI_Icon_Settings`
+- `SPR_UI_Button_Primary`
+- `SPR_UI_Icon_DailyReward`
+
+### 9.4. Music Pattern
+Format:
+`MUS_[Name]`
+
+Examples:
+- `MUS_MainMenu`
+- `MUS_RaceLoop`
+
+### 9.5. SFX Pattern
+Format:
+`SFX_[Name]`
+
+Examples:
+- `SFX_ButtonClick`
+- `SFX_CountdownTick`
+- `SFX_RaceFinish`
+
+### 9.6. Material Pattern
+Format:
+`MAT_[Name]`
+
+Examples:
+- `MAT_Bike_Default`
+- `MAT_UI_Default`
+
+### 9.7. Animation Pattern
+Format:
+`AN_[Name]`
+
+Examples:
+- `AN_Bike_Bike01_Idle`
+- `AN_Bike_Bike01_Drive`
+- `AN_UI_ResultPanel_Show`
+
+---
+
+## 10. Folder Names
+
+### 10.1. Root Project Folders
+Inside `Assets/_Project/`, only the following root folders are allowed:
+- `Bootstrap`
+- `Core`
+- `Domain`
+- `Application`
+- `Infrastructure`
+- `Gameplay`
+- `UI`
+- `Configs`
+- `Content`
+- `Scenes`
+- `Tests`
+- `Editor`
+
+### 10.2. Nested Folders
+Nested folders use PascalCase.
+
+Examples:
+- `Assets/_Project/Domain/Maps`
+- `Assets/_Project/Infrastructure/Save/Local`
+- `Assets/_Project/UI/Screens/MainMenu`
+
+Forbidden examples:
+- `main menu`
+- `bike_scripts`
+- `new folder`
+- `misc`
+
+---
+
+## 11. Localization Key Rules
+
+Even with one language in MVP, strings must use a unified key pattern.
+
+Format:
+`[section].[screen_or_group].[name]`
+
+Examples:
+- `menu.main.play`
+- `menu.main.leaderboards`
+- `settings.audio.music_volume`
+- `settings.audio.sfx_volume`
+- `result.title.finish`
+- `result.button.retry`
+
+---
+
+## 12. Canonical Config Field Names
+
+### 12.1. `MapDefinition`
+- `Id`
+- `DisplayName`
+- `SceneName`
+- `LeaderboardId`
+- `IsEnabled`
+
+### 12.2. `BikeDefinition`
+- `Id`
+- `DisplayName`
+- `Acceleration`
+- `MaxSpeed`
+- `Handling`
+- `IsEnabled`
+
+### 12.3. `BikeColorDefinition`
+- `Id`
+- `DisplayName`
+- `ColorHex`
+- `IsEnabled`
+
+### 12.4. `PlayerProfile`
+- `SelectedBikeId`
+- `SelectedColorId`
+- `BestTimesByMap`
+- `MusicVolume`
+- `SfxVolume`
+
+---
+
+## 13. Forbidden Practices
+
+The following are forbidden:
+- different names for the same entity;
+- local asset renaming without documentation update;
+- shortcuts not fixed in this document;
+- names such as:
+  - `bike_new`;
+  - `bike_final`;
+  - `bike_final2`;
+  - `new_button`;
+  - `test_map_real`;
+- Russian names for technical entities;
+- mixing `Map` and `Track` for the same domain entity.
+
+---
+
+## 14. New Entity Introduction Order
+
+When a new entity is added, the following order is mandatory:
+1. define entity type;
+2. define canonical name;
+3. define ID and naming pattern;
+4. update this document;
+5. create the entity in code, content, and documentation;
+6. use only the fixed name.
+
+Breaking this order is an architectural error.
+
+---
+
+## 15. MVP Registry
+
+### 15.1. Scenes
+- `00_Bootstrap`
+- `01_MainMenu`
+- `02_Race`
+- `90_TestGameplay`
+- `91_TestUI`
+
+### 15.2. Configs
+- `CFG_Game_Main`
+- `CFG_Map_Map01`
+- `CFG_Bike_Bike01`
+- `CFG_Color_Red`
+
+### 15.3. IDs
+- `map_01`
+- `bike_01`
+- `color_red`
+- `leaderboard_map_01`
+
+### 15.4. Base Art Assets for MVP
+- `SPR_Bike_Bike01_Body`
+- `SPR_Bike_Bike01_WheelFront`
+- `SPR_Bike_Bike01_WheelRear`
+- `SPR_Rider_Bike01_Base`
+- `SPR_Map_Map01_Tile_Ground_A`
+- `SPR_Map_Map01_BG_Sky`
+- `SPR_Map_Map01_FinishBanner`
+- `SPR_UI_Button_Primary`
+- `SPR_UI_Button_Secondary`
+- `SPR_UI_Panel_Base`
+- `SPR_UI_Icon_Settings`
+- `SPR_UI_Icon_Leaderboard`
+- `SPR_UI_Icon_DailyReward`
+- `SPR_Brand_GameIcon`
+
+---
+
+## 16. Status
+
+This document is mandatory for:
+- programmer;
+- artist;
+- technical designer;
+- any contributor creating code, content, or documentation.
+
+Any deviation is allowed only after this document is explicitly updated.
