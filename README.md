@@ -22,6 +22,9 @@ Small game
 - [Result Screen & Restart Loop](Docs/design/result-screen-and-restart-loop.md)
 - [MVP Scope & Feature Priority Matrix](Docs/design/mvp-scope-and-feature-priority-matrix.md)
 
+### Production
+- [Task Breakdown for MVP Milestone](Docs/production/task-breakdown-for-mvp-milestone.md)
+
 ## Current MVP focus
 - 1 track;
 - 1 bike;
