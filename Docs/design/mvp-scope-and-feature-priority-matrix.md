@@ -28,6 +28,16 @@ The MVP includes:
 - quick restart;
 - minimal HUD.
 
+## Current first playable rule
+The current first playable vertical slice uses a fixed start flow:
+- race start auto-selects `map_01`;
+- race start auto-selects `bike_01`;
+- race start auto-applies `color_red`.
+
+Manual map, bike, or color selection is not required for the current milestone.
+
+If a shell placeholder for Garage or Daily Rewards is shown, it must remain non-blocking and must not delay the playable race loop.
+
 ## Priority categories
 ### Must have
 Without this, the vertical slice fails to prove the game.
@@ -55,15 +65,18 @@ Not for the MVP production phase.
 | `leaderboard_map_01` | Must have | supports competition motivation |
 | local save | Must have | persists best result and minimal player state |
 | minimal HUD | Must have | supports active race readability |
-| pause | Must have | expected session control in MVP |
+| pause | Should have | useful session control, but not required to prove the first playable race loop |
 | best-time display in result flow | Should have | strong replay support at modest cost |
 | settings for music and SFX | Should have | improves player comfort with limited scope |
-| simple color selection | Should have | cheap personalization if pipeline exists |
-| lightweight garage shell | Should have | can support product shell without becoming meta |
+| simple color selection | Could have | acceptable only after the auto-selected core loop is stable |
+| lightweight garage shell | Could have | only as a non-blocking shell placeholder |
 | daily quest shell | Could have | retention value exists but not core-proof critical |
 | second bike | Could have | useful after first bike feel is proven |
 | additional maps | Could have | content width after vertical slice proof |
 | advanced stat differentiation | Could have | not required for MVP proof |
+| manual map selection UI | Out of scope | the current first playable flow auto-selects `map_01` |
+| manual bike selection UI | Out of scope | the current first playable flow auto-selects `bike_01` |
+| manual color selection UI | Out of scope | the current first playable flow auto-applies `color_red` |
 | deep progression systems | Out of scope | risks masking weak core loop |
 | complex economy | Out of scope | high cost, low MVP proof value |
 | heavy monetization | Out of scope | premature and potentially harmful to first experience |
@@ -93,6 +106,7 @@ Must have:
 - result-to-restart priority.
 
 Should have:
+- pause;
 - minor transition polish.
 
 Could have:
@@ -104,12 +118,11 @@ Must have:
 - save and best result persistence.
 
 Should have:
-- lightweight settings;
-- lightweight shell framing.
+- lightweight settings.
 
 Could have:
-- daily hooks;
-- wider shell loops.
+- lightweight shell framing;
+- Garage and Daily Rewards placeholders that do not block race start.
 
 ## Decision filter for new ideas
 For every new idea, answer:
