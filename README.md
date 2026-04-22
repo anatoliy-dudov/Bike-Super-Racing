@@ -25,6 +25,7 @@ Small game
 ### Production
 - [Task Breakdown for MVP Milestone](Docs/production/task-breakdown-for-mvp-milestone.md)
 - [First Tasks Pack for Unity Programmer](Docs/production/first-tasks-pack-for-unity-programmer.md)
+- [First Tasks Pack for Artist / Pixel Artist](Docs/production/first-tasks-pack-for-artist-pixel-artist.md)
 
 ## Current MVP focus
 - 1 track;
