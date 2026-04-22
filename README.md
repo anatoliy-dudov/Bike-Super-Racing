@@ -26,6 +26,8 @@ Small game
 - [Task Breakdown for MVP Milestone](Docs/production/task-breakdown-for-mvp-milestone.md)
 - [First Tasks Pack for Unity Programmer](Docs/production/first-tasks-pack-for-unity-programmer.md)
 - [First Tasks Pack for Artist / Pixel Artist](Docs/production/first-tasks-pack-for-artist-pixel-artist.md)
+- [First Tasks Pack for UI/UX](Docs/production/first-tasks-pack-for-ui-ux.md)
+- [QA Smoke Pack for MVP](Docs/production/qa-smoke-pack-for-mvp.md)
 
 ## Current MVP focus
 - 1 track;
