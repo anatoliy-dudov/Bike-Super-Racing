@@ -28,6 +28,8 @@ Small game
 - [First Tasks Pack for Artist / Pixel Artist](Docs/production/first-tasks-pack-for-artist-pixel-artist.md)
 - [First Tasks Pack for UI/UX](Docs/production/first-tasks-pack-for-ui-ux.md)
 - [QA Smoke Pack for MVP](Docs/production/qa-smoke-pack-for-mvp.md)
+- [First Tasks Pack for Documentation / PM](Docs/production/first-tasks-pack-for-documentation-pm.md)
+- [Milestone Risk Register for MVP](Docs/production/milestone-risk-register-for-mvp.md)
 
 ## Current MVP focus
 - 1 track;
