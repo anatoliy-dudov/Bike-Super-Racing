@@ -110,12 +110,14 @@ The project uses the following canonical domain names:
 - `RaceSession`
 - `RaceResult`
 - `GameConfig`
+- `RaceState`
 
 Forbidden alternatives:
 - `TrackDefinition` instead of `MapDefinition`;
 - `MotorcycleDefinition` instead of `BikeDefinition`;
 - `UserProfile` instead of `PlayerProfile`;
-- `RaceData` instead of `RaceSession` or `RaceResult`.
+- `RaceData` instead of `RaceSession` or `RaceResult`;
+- `RacePhase` instead of `RaceState`.
 
 ---
 
@@ -145,6 +147,12 @@ The project uses the following canonical service names:
 - `LocalSaveService`
 - `CloudSaveStubService`
 - `TimeService`
+- `RaceSessionService`
+- `RaceTimerService`
+- `CountdownService`
+- `RaceResultService`
+- `RaceFlowController`
+- `FinishTrigger`
 
 Additional implementations are allowed only if the name clearly reflects real responsibility.
 
@@ -168,7 +176,8 @@ The project uses the following canonical UI classes:
 Forbidden alternatives without updating this document:
 - `MainScreen` instead of `MainMenuScreen`;
 - `OptionsPopup` instead of `SettingsPopup`;
-- `HudView` instead of `RaceHudView`.
+- `HudView` instead of `RaceHudView`;
+- `ResultScreen` instead of `ResultPanel`.
 
 ---
 
@@ -209,6 +218,8 @@ Examples:
 - `PREF_Bike_Bike01`
 - `PREF_UI_MainMenuScreen`
 - `PREF_UI_ResultPanel`
+- `PREF_UI_RaceHudView`
+- `PREF_UI_CountdownWidget`
 
 ### 9.3. Sprite Pattern
 Format:
@@ -286,6 +297,8 @@ Examples:
 - `Assets/_Project/Domain/Maps`
 - `Assets/_Project/Infrastructure/Save/Local`
 - `Assets/_Project/UI/Screens/MainMenu`
+- `Assets/_Project/Gameplay/RaceFlow`
+- `Assets/_Project/Gameplay/Finish`
 
 Forbidden examples:
 - `main menu`
@@ -309,6 +322,7 @@ Examples:
 - `settings.audio.sfx_volume`
 - `result.title.finish`
 - `result.button.retry`
+- `countdown.value.three`
 
 ---
 
@@ -341,6 +355,16 @@ Examples:
 - `BestTimesByMap`
 - `MusicVolume`
 - `SfxVolume`
+
+### 12.5. `RaceState`
+- `EnterRaceScene`
+- `PreStart`
+- `Countdown`
+- `RaceActive`
+- `RaceFinished`
+- `ResultPresentation`
+- `RestartRequested`
+- `Pause`
 
 ---
 
