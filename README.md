@@ -33,6 +33,7 @@ Small game
 - [First Tasks Pack for Documentation / PM](Docs/production/first-tasks-pack-for-documentation-pm.md)
 - [Milestone Risk Register for MVP](Docs/production/milestone-risk-register-for-mvp.md)
 - [MVP Acceptance Criteria & Go/No-Go Checklist](Docs/production/mvp-acceptance-criteria-and-go-no-go-checklist.md)
+- [MVP Progress Dashboard](Docs/production/mvp-progress-dashboard.md)
 
 ## Current MVP focus
 - 1 track;
