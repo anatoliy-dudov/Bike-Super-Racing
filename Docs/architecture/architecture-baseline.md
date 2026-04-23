@@ -142,6 +142,10 @@ UI presents state and data. UI does not own gameplay truth.
 ### 6.6. Growth Without Rebuild
 Adding a second map, second bike, extra colors, or extra leaderboard IDs must not require a redesign of the runtime core.
 
+### 6.7. Explicit Race State Model
+The race loop must use explicit runtime state and explicit state transitions.
+Scattered implicit flags must not replace the canonical race-state baseline.
+
 ---
 
 ## 7. Canonical MVP Registry
@@ -173,6 +177,7 @@ Adding a second map, second bike, extra colors, or extra leaderboard IDs must no
 - `RaceSession`
 - `RaceResult`
 - `GameConfig`
+- `RaceState`
 
 ### 7.5. Service Contracts
 - `IAppStateService`
@@ -198,6 +203,12 @@ Adding a second map, second bike, extra colors, or extra leaderboard IDs must no
 - `LocalSaveService`
 - `CloudSaveStubService`
 - `TimeService`
+- `RaceSessionService`
+- `RaceTimerService`
+- `CountdownService`
+- `RaceResultService`
+- `RaceFlowController`
+- `FinishTrigger`
 
 ### 7.7. Base UI Components
 - `MainMenuScreen`
@@ -206,6 +217,16 @@ Adding a second map, second bike, extra colors, or extra leaderboard IDs must no
 - `RaceHudView`
 - `CountdownWidget`
 - `ResultPanel`
+
+### 7.8. Canonical Race States
+- `EnterRaceScene`
+- `PreStart`
+- `Countdown`
+- `RaceActive`
+- `RaceFinished`
+- `ResultPresentation`
+- `RestartRequested`
+- `Pause`
 
 ---
 
@@ -232,7 +253,8 @@ Responsibilities:
 - game entities;
 - config models;
 - player profile model;
-- race session and race result model.
+- race session and race result model;
+- race state model.
 
 ### 8.4. `Application`
 Responsibilities:
@@ -259,7 +281,8 @@ Responsibilities:
 - timer;
 - finish;
 - race flow;
-- restart flow.
+- restart flow;
+- race-state transition control.
 
 ### 8.7. `UI`
 Responsibilities:
@@ -278,7 +301,7 @@ Allowed dependencies:
 - `Infrastructure` depends on `Core` and `Domain`;
 - `Gameplay` depends on `Core`, `Domain`, `Application`;
 - `UI` depends on `Core` and `Application`;
-- `Bootstrap` depends on `Application`, `Infrastructure`, `UI`.
+- `Bootstrap` depends on `Application`, `Infrastructure`, `UI`, `Gameplay`.
 
 Forbidden dependencies:
 - `Domain` -> `Infrastructure`;
@@ -313,6 +336,7 @@ Responsibilities:
 - load `map_01`;
 - spawn `bike_01`;
 - apply `color_red`;
+- enter `EnterRaceScene` and `PreStart` states;
 - run countdown;
 - run timer;
 - detect finish;
@@ -326,6 +350,18 @@ Responsibilities:
 ### 10.5. `91_TestUI`
 Responsibilities:
 - isolated UI validation.
+
+### 10.6. Race State Baseline
+The MVP race scene must support the following state chain:
+1. `EnterRaceScene`;
+2. `PreStart`;
+3. `Countdown`;
+4. `RaceActive`;
+5. `RaceFinished`;
+6. `ResultPresentation`;
+7. `RestartRequested`.
+
+`Pause` is a supported explicit state and may branch from `RaceActive`.
 
 ---
 
@@ -440,6 +476,7 @@ The first playable vertical MVP is accepted when:
 - routes cleanly to `01_MainMenu`;
 - race starts from menu;
 - `RaceSession` is created correctly;
+- `RaceFlowController` moves through the canonical race states correctly;
 - countdown and timer are synchronized with control opening;
 - finish stops the timer once;
 - `RaceResult` is created correctly;
