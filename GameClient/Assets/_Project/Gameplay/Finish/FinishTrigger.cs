@@ -10,7 +10,7 @@ namespace BikeSuperRacing.Gameplay.Finish
 
         public void RegisterTargetBike(Rigidbody2D targetBikeRigidbody2D)
         {
-            _targetBikeRigidbodyD = targetBikeRigidbody2D;
+            _targetBikeRigidbody2D = targetBikeRigidbody2D;
         }
 
         private void Reset()
@@ -30,12 +30,9 @@ namespace BikeSuperRacing.Gameplay.Finish
                 return;
             }
 
-            if (_targetBikeRigidbody2D != null)
+            if (_targetBikeRigidbody2D != null && other.attachedRigidbody != _targetBikeRigidbody2D)
             {
-                if (other.attachedRigidbody != _targetBikeRigidbody2D)
-                {
-                    return;
-                }
+                return;
             }
 
             _raceFlowController.HandleFinishTriggered();
