@@ -8,6 +8,7 @@ Small game
 - [Asset List MVP](Docs/art/asset-list-mvp.md)
 - [Bike 01 Production Sheet](Docs/art/bike-01-production-sheet.md)
 - [Map 01 Tileset Spec](Docs/art/map-01-tileset-spec.md)
+- [UI MVP Specification](Docs/art/ui-mvp-spec.md)
 
 ### Architecture
 - [Naming Convention](Docs/architecture/naming-convention.md)
