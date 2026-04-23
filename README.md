@@ -9,6 +9,7 @@ Small game
 - [Bike 01 Production Sheet](Docs/art/bike-01-production-sheet.md)
 - [Map 01 Tileset Spec](Docs/art/map-01-tileset-spec.md)
 - [UI MVP Specification](Docs/art/ui-mvp-spec.md)
+- [First Art Batch Execution Pack](Docs/art/first-art-batch-execution-pack.md)
 
 ### Architecture
 - [Naming Convention](Docs/architecture/naming-convention.md)
