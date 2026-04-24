@@ -24,6 +24,7 @@ Bike-Super-Racing/
 │   ├── architecture/
 │   ├── art/
 │   ├── design/
+│   ├── production/
 │   └── release/
 ├── GameClient/
 │   ├── Assets/
@@ -54,6 +55,7 @@ Docs/
 ├── architecture/
 ├── art/
 ├── design/
+├── production/
 └── release/
 ```
 
@@ -86,9 +88,22 @@ Examples:
 - `game-vision.md`
 - `core-gameplay-loop.md`
 - `race-flow-and-hud.md`
+- `result-screen-and-restart-loop.md`
 - `mvp-scope-and-feature-priority-matrix.md`
 
-### 3.4. `Docs/release/`
+### 3.4. `Docs/production/`
+Contains production task packs, role-based execution documents, risks, and acceptance checklists.
+
+Examples:
+- `task-breakdown-for-mvp-milestone.md`
+- `first-tasks-pack-for-unity-programmer.md`
+- `first-tasks-pack-for-artist-pixel-artist.md`
+- `first-tasks-pack-for-ui-ux.md`
+- `qa-smoke-pack-for-mvp.md`
+- `milestone-risk-register-for-mvp.md`
+- `mvp-acceptance-criteria-and-go-no-go-checklist.md`
+
+### 3.5. `Docs/release/`
 Contains release checklist, build notes, and publication instructions.
 
 ---
