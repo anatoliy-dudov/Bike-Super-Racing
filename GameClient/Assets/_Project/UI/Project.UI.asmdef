@@ -1,0 +1,17 @@
+{
+  "name": "Project.UI",
+  "rootNamespace": "BikeSuperRacing",
+  "references": [
+    "Project.Core",
+    "Project.Application"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
