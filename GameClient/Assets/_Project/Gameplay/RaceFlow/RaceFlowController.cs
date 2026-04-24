@@ -1,6 +1,8 @@
 using BikeSuperRacing.Bootstrap.EntryPoint;
 using BikeSuperRacing.Core.Interfaces;
 using BikeSuperRacing.Domain.Race;
+using BikeSuperRacing.Gameplay.Bike.Controllers;
+using BikeSuperRacing.Gameplay.Bike.View;
 using BikeSuperRacing.Gameplay.Countdown;
 using BikeSuperRacing.Gameplay.Finish;
 using BikeSuperRacing.Gameplay.Timer;
@@ -16,6 +18,8 @@ namespace BikeSuperRacing.Gameplay.RaceFlow
         [Header("Bike")]
         [SerializeField] private Transform _bikeTransform;
         [SerializeField] private Rigidbody2D _bikeRigidbody2D;
+        [SerializeField] private BikeController2D _bikeController2D;
+        [SerializeField] private BikeColorApplier _bikeColorApplier;
         [SerializeField] private Behaviour[] _controlBehaviours;
         [SerializeField] private Transform _startPoint;
 
@@ -34,18 +38,15 @@ namespace BikeSuperRacing.Gameplay.RaceFlow
         private IPlayerProfileService _playerProfileService;
         private ITimeService _timeService;
         private ISceneLoader _sceneLoader;
-
         private IRaceSessionService _raceSessionService;
         private IRaceTimerService _raceTimerService;
         private ICountdownService _countdownService;
         private IRaceResultService _raceResultService;
-
         private bool _isInitialized;
 
         private void Awake()
         {
             InitializeServices();
-            ValidateSerializedReferences();
         }
 
         private void OnEnable()
@@ -124,11 +125,7 @@ namespace BikeSuperRacing.Gameplay.RaceFlow
             DisableBikeControl();
             _raceTimerService.StopTimer();
             _raceSessionService.SetRaceState(RaceState.RaceFinished);
-
-            var raceResult = _raceResultService.CreateRaceResult(
-                _raceSessionService.CurrentRaceSession,
-                _raceTimerService.ElapsedTimeSeconds);
-
+            var raceResult = _raceResultService.CreateRaceResult(_raceSessionService.CurrentRaceSession, _raceTimerService.ElapsedTimeSeconds);
             _raceSessionService.SetRaceState(RaceState.ResultPresentation);
 
             if (_resultPanel != null)
@@ -144,16 +141,9 @@ namespace BikeSuperRacing.Gameplay.RaceFlow
             _timeService = Bootstrapper.TimeService;
             _sceneLoader = Bootstrapper.SceneLoader;
 
-            if (_configService == null || !_configService.IsInitialized)
+            if (_configService == null || !_configService.IsInitialized || _playerProfileService == null || !_playerProfileService.IsInitialized)
             {
-                Debug.LogError("RaceFlowController: ConfigService is not initialized.");
-                _isInitialized = false;
-                return;
-            }
-
-            if (_playerProfileService == null || !_playerProfileService.IsInitialized)
-            {
-                Debug.LogError("RaceFlowController: PlayerProfileService is not initialized.");
+                Debug.LogError("RaceFlowController: required bootstrap services are not initialized.");
                 _isInitialized = false;
                 return;
             }
@@ -165,29 +155,9 @@ namespace BikeSuperRacing.Gameplay.RaceFlow
             _isInitialized = true;
         }
 
-        private void ValidateSerializedReferences()
-        {
-            if (_bikeTransform == null)
-            {
-                Debug.LogWarning("RaceFlowController: Bike Transform is not assigned.");
-            }
-
-            if (_bikeRigidbody2D == null)
-            {
-                Debug.LogWarning("RaceFlowController: Bike Rigidbody2D is not assigned.");
-            }
-
-            if (_startPoint == null)
-            {
-                Debug.LogWarning("RaceFlowController: Start Point is not assigned.");
-            }
-        }
-
         private void StartNewAttempt()
         {
-            var mapId = !string.IsNullOrWhiteSpace(_mapIdOverride)
-                ? _mapIdOverride.Trim()
-                : _configService.DefaultMap.Id;
+            var mapId = !string.IsNullOrWhiteSpace(_mapIdOverride) ? _mapIdOverride.Trim() : _configService.DefaultMap.Id;
 
             if (!_configService.TryGetMapDefinition(mapId, out var mapDefinition))
             {
@@ -195,20 +165,14 @@ namespace BikeSuperRacing.Gameplay.RaceFlow
                 return;
             }
 
-            var bikeId = _playerProfileService.CurrentProfile != null
-                ? _playerProfileService.CurrentProfile.SelectedBikeId
-                : _configService.DefaultBike.Id;
-
+            var bikeId = _playerProfileService.CurrentProfile != null ? _playerProfileService.CurrentProfile.SelectedBikeId : _configService.DefaultBike.Id;
             if (!_configService.TryGetBikeDefinition(bikeId, out var bikeDefinition))
             {
                 bikeDefinition = _configService.DefaultBike;
                 bikeId = bikeDefinition.Id;
             }
 
-            var colorId = _playerProfileService.CurrentProfile != null
-                ? _playerProfileService.CurrentProfile.SelectedColorId
-                : _configService.DefaultColor.Id;
-
+            var colorId = _playerProfileService.CurrentProfile != null ? _playerProfileService.CurrentProfile.SelectedColorId : _configService.DefaultColor.Id;
             if (!_configService.TryGetBikeColorDefinition(colorId, out var bikeColorDefinition))
             {
                 bikeColorDefinition = _configService.DefaultColor;
@@ -217,6 +181,16 @@ namespace BikeSuperRacing.Gameplay.RaceFlow
 
             _raceSessionService.CreateRaceSession(mapDefinition.Id, bikeId, colorId, mapDefinition.LeaderboardId);
             _raceSessionService.SetRaceState(RaceState.EnterRaceScene);
+
+            if (_bikeController2D != null)
+            {
+                _bikeController2D.ApplyBikeDefinition(bikeDefinition);
+            }
+
+            if (_bikeColorApplier != null)
+            {
+                _bikeColorApplier.ApplyBikeColorDefinition(bikeColorDefinition);
+            }
 
             ResetBikeRuntime();
             _raceTimerService.ResetTimer();
@@ -328,9 +302,7 @@ namespace BikeSuperRacing.Gameplay.RaceFlow
 
         private void HandleExitRequested()
         {
-            var mainMenuSceneName = _configService != null && _configService.GameConfig != null
-                ? _configService.GameConfig.MainMenuSceneName
-                : string.Empty;
+            var mainMenuSceneName = _configService != null && _configService.GameConfig != null ? _configService.GameConfig.MainMenuSceneName : string.Empty;
 
             if (string.IsNullOrWhiteSpace(mainMenuSceneName))
             {
@@ -369,6 +341,12 @@ namespace BikeSuperRacing.Gameplay.RaceFlow
             if (_bikeTransform != null && _startPoint != null)
             {
                 _bikeTransform.SetPositionAndRotation(_startPoint.position, _startPoint.rotation);
+            }
+
+            if (_bikeController2D != null)
+            {
+                _bikeController2D.ResetRuntimeState();
+                return;
             }
 
             if (_bikeRigidbody2D != null)
