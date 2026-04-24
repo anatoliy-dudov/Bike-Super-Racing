@@ -58,7 +58,7 @@ At the end of this pack, the programmer should have a build where:
 - main menu opens;
 - player can enter race;
 - one controllable bike exists;
-- one playable track exists;
+- one playable map exists;
 - countdown starts;
 - timer runs;
 - finish stops the timer;
@@ -74,34 +74,57 @@ Create the minimum project structure and scene chain required to begin real game
 
 ## Tasks
 ### 1.1 Create required scenes
-Create the following scenes in the canonical path:
-- `/Assets/_Project/Scenes/00_Bootstrap.unity`;
-- `/Assets/_Project/Scenes/01_MainMenu.unity`;
-- `/Assets/_Project/Scenes/02_Race.unity`;
-- `/Assets/_Project/Scenes/90_TestGameplay.unity`;
-- `/Assets/_Project/Scenes/91_TestUI.unity`.
+Create the following scenes in the canonical path inside `GameClient/Assets/_Project/Scenes/`:
+- `00_Bootstrap.unity`;
+- `01_MainMenu.unity`;
+- `02_Race.unity`;
+- `90_TestGameplay.unity`;
+- `91_TestUI.unity`.
 
 ### 1.2 Create required folders if missing
-Ensure the following minimal folders exist:
-- `/Assets/_Project/Config/Game`;
-- `/Assets/_Project/Config/Maps`;
-- `/Assets/_Project/Config/Bikes`;
-- `/Assets/_Project/Config/Colors`;
-- `/Assets/_Project/Prefabs/Gameplay`;
-- `/Assets/_Project/Prefabs/UI`;
-- `/Assets/_Project/Scripts/Bootstrap`;
-- `/Assets/_Project/Scripts/Domain`;
-- `/Assets/_Project/Scripts/Application/Services`;
-- `/Assets/_Project/Scripts/Infrastructure`;
-- `/Assets/_Project/Scripts/Gameplay`;
-- `/Assets/_Project/Scripts/UI`.
+Ensure the following minimal folders exist inside `GameClient/Assets/_Project/`:
+- `Bootstrap/EntryPoint`;
+- `Core/Interfaces`;
+- `Domain/Maps`;
+- `Domain/Bikes`;
+- `Domain/Profile`;
+- `Domain/Race`;
+- `Domain/Settings`;
+- `Application/Facades`;
+- `Infrastructure/Save/Local`;
+- `Infrastructure/Save/CloudStub`;
+- `Infrastructure/Time`;
+- `Infrastructure/Leaderboards`;
+- `Gameplay/RaceFlow`;
+- `Gameplay/Bike`;
+- `Gameplay/Map`;
+- `Gameplay/Countdown`;
+- `Gameplay/Finish`;
+- `Gameplay/Timer`;
+- `UI/Screens/MainMenu`;
+- `UI/Popups/Settings`;
+- `UI/Popups/Leaderboard`;
+- `UI/HUD`;
+- `UI/Widgets`;
+- `Configs/Game`;
+- `Configs/Maps`;
+- `Configs/Bikes`;
+- `Content/Prefabs/Bikes`;
+- `Content/Prefabs/Maps`;
+- `Content/Prefabs/UI`.
 
 ### 1.3 Create config asset stubs
-Create these config assets, even if they are mostly empty at first:
+Create these config assets:
 - `CFG_Game_Main`;
 - `CFG_Map_Map01`;
 - `CFG_Bike_Bike01`;
 - `CFG_Color_Red`.
+
+Canonical locations:
+- `GameClient/Assets/_Project/Configs/Game/CFG_Game_Main.asset`;
+- `GameClient/Assets/_Project/Configs/Maps/CFG_Map_Map01.asset`;
+- `GameClient/Assets/_Project/Configs/Bikes/CFG_Bike_Bike01.asset`;
+- `GameClient/Assets/_Project/Configs/Bikes/CFG_Color_Red.asset`.
 
 ### 1.4 Create script stubs for required runtime contracts
 Create stubs or minimal implementations for:
@@ -111,21 +134,46 @@ Create stubs or minimal implementations for:
 - `IConfigService.cs`;
 - `IPlayerProfileService.cs`;
 - `ISaveService.cs`;
+- `ILeaderboardService.cs`;
 - `IRaceSessionService.cs`;
 - `IRaceTimerService.cs`;
 - `ICountdownService.cs`;
 - `IRaceResultService.cs`;
+- `IAudioSettingsService.cs`;
+- `ILocalizationService.cs`;
+- `ITimeService.cs`;
 - `SceneLoader.cs`;
 - `AppStateService.cs`;
 - `ConfigService.cs`;
 - `PlayerProfileService.cs`;
-- `LocalSaveService.cs`.
+- `LocalSaveService.cs`;
+- `CloudSaveStubService.cs`;
+- `TimeService.cs`.
+
+Recommended canonical locations:
+- interfaces: `GameClient/Assets/_Project/Core/Interfaces/`;
+- domain models: `GameClient/Assets/_Project/Domain/...`;
+- bootstrap entry: `GameClient/Assets/_Project/Bootstrap/EntryPoint/`;
+- facades: `GameClient/Assets/_Project/Application/Facades/`;
+- infrastructure implementations: `GameClient/Assets/_Project/Infrastructure/...`.
+
+### 1.5 Create baseline domain objects
+Create the minimum domain model skeleton:
+- `MapDefinition`;
+- `BikeDefinition`;
+- `BikeColorDefinition`;
+- `PlayerProfile`;
+- `RaceSession`;
+- `RaceResult`;
+- `GameConfig`.
 
 ## Minimum output of Phase 1
 After Phase 1, the project must have:
 - canonical scenes created;
 - canonical folders created;
 - config asset stubs created;
+- domain model skeleton created;
+- service contracts created;
 - script skeleton consistent with architecture docs.
 
 ## Definition of done for Phase 1
@@ -163,7 +211,7 @@ Required behavior:
 Required MVP behavior:
 - read best time for `map_01`;
 - write best time for `map_01`;
-- optionally read/write selected color / basic player shell selection.
+- optionally read/write selected color or minimal shell state.
 
 ### 2.5 Implement `PlayerProfileService`
 Required behavior:
@@ -175,7 +223,7 @@ Required behavior:
 The first version of main menu can be simple.
 Required elements:
 - one clear entry action to start race;
-- optional placeholder buttons for settings / leaderboard if needed;
+- optional placeholder buttons for settings and leaderboard if needed;
 - no heavy shell logic yet.
 
 ## UI implementation note for programmer
@@ -248,6 +296,11 @@ The scene must have a clear owner of race state.
 The first version may be simple.
 Each must exist as a dedicated UI component with a clear responsibility.
 
+Recommended canonical locations:
+- `GameClient/Assets/_Project/UI/HUD/RaceHudView.cs`;
+- `GameClient/Assets/_Project/UI/Widgets/CountdownWidget.cs`;
+- `GameClient/Assets/_Project/UI/Screens/Result/ResultPanel.cs`.
+
 ## Minimum output of Phase 3
 After Phase 3, the race scene has a stable structural skeleton that can host a real playable loop.
 
@@ -266,7 +319,7 @@ Get one controllable bike working well enough for first feel tests.
 The first version of `bike_01` must support:
 - forward movement;
 - baseline speed behavior;
-- stable interaction with the track;
+- stable interaction with the map;
 - enough predictability for first readability and feel testing.
 
 Do not overbuild at this stage.
@@ -283,11 +336,14 @@ Expose at least a minimal tunable set for quick iteration, for example:
 ### 4.3 Create or bind `PREF_Bike_Bike01`
 The race scene must instantiate or use the canonical bike prefab.
 
+Recommended canonical location:
+- `GameClient/Assets/_Project/Content/Prefabs/Bikes/PREF_Bike_Bike01.prefab`.
+
 ### 4.4 Support placeholder-safe visual integration
 Even before final art is ready, the bike object must be visually readable enough that design can judge:
 - location;
 - orientation;
-- interaction with the track.
+- interaction with the map.
 
 ## Gameplay feel note for programmer
 The early controller must prioritize:
@@ -299,7 +355,7 @@ The early controller must prioritize:
 It does not need advanced polish yet.
 
 ## Minimum output of Phase 4
-A tester can control the bike on the track and start feeling the first version of the game loop.
+A tester can control the bike on the map and start feeling the first version of the game loop.
 
 ## Definition of done for Phase 4
 The bike can move through a testable race scene without major control-breaking instability.
@@ -312,15 +368,15 @@ The bike can move through a testable race scene without major control-breaking i
 Create the first playable version of `map_01` that supports one real start-to-finish run.
 
 ## Tasks
-### 5.1 Assemble first playable track geometry
+### 5.1 Assemble first playable map geometry
 Use placeholder or early production tiles/modules to assemble `map_01` with:
 - clear start region;
-- readable mid-track sections;
+- readable mid-map sections;
 - finish region;
 - no impossible geometry;
 - no visual dependence on final art polish.
 
-### 5.2 Prioritize track readability in geometry placement
+### 5.2 Prioritize map readability in geometry placement
 The first version of `map_01` should support design goals from onboarding and difficulty docs:
 - early readable adaptation section;
 - one first understandable challenge;
@@ -382,10 +438,10 @@ Use low-noise layout even with temporary visuals.
 Practical expectation:
 - timer readable at a glance;
 - countdown large and centered;
-- no oversized debug text covering the track in production-facing prototype builds.
+- no oversized debug text covering the map in production-facing prototype builds.
 
 ## Minimum output of Phase 6
-A tester can run the track, see time, finish, and transition into result state.
+A tester can run the map, see time, finish, and transition into result state.
 
 ## Definition of done for Phase 6
 The race loop is now measurable and no longer only a raw movement prototype.
@@ -527,7 +583,7 @@ Do not postpone:
 - best local result persistence;
 - naming correctness.
 
-These are foundational and expensive to “clean up later”.
+These are foundational and expensive to clean up later.
 
 ---
 
@@ -551,7 +607,7 @@ Keep UI display separate from gameplay truth.
 # Hand-off expectations from other roles
 ## Needed from design
 - immediate clarification on control-feel issues;
-- validation of track readability;
+- validation of map readability;
 - validation of result/restart priorities.
 
 ## Needed from art
@@ -586,6 +642,6 @@ The first objective is to make the race loop real, stable and repeatable.
 
 If a task does not help the team test:
 - control feel;
-- track readability;
+- map readability;
 - finish-to-restart loop;
 then it is probably not the next task.
