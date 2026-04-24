@@ -3,6 +3,21 @@
 ## Purpose
 This document describes the minimal setup required to make `02_Race` playable with the current runtime baseline.
 
+## Fastest setup path
+After opening the project in Unity Editor, the recommended path is:
+1. wait for script compilation;
+2. run `Bike Super Racing/Setup/Create Full MVP Setup`;
+3. open `Assets/_Project/Scenes/00_Bootstrap.unity`;
+4. press Play.
+
+This automation creates:
+- MVP config assets;
+- `00_Bootstrap`;
+- `01_MainMenu`;
+- `02_Race`;
+- build settings entries for those scenes;
+- minimal UI and runtime references needed for the first playable loop.
+
 ## Scene
 Use scene name:
 - `02_Race`
@@ -87,6 +102,9 @@ Assign:
 Open Unity Editor and run:
 - `Bike Super Racing/Setup/Create MVP Config Assets`
 
+Or use the full path:
+- `Bike Super Racing/Setup/Create Full MVP Setup`
+
 This creates or updates:
 - `CFG_Game_Main`;
 - `CFG_Map_Map01`;
@@ -95,6 +113,8 @@ This creates or updates:
 
 ## Bootstrap dependency
 Ensure `00_Bootstrap` contains a `Bootstrapper` with `CFG_Game_Main` assigned.
+
+The full setup automation already does this.
 
 ## Minimal playable check
 The setup is considered valid when:
