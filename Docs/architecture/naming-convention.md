@@ -153,6 +153,11 @@ The project uses the following canonical service names:
 - `RaceResultService`
 - `RaceFlowController`
 - `FinishTrigger`
+- `BikeController2D`
+- `BikeColorApplier`
+
+### 6.2. Canonical Editor Utilities
+- `MvpConfigAssetCreator`
 
 Additional implementations are allowed only if the name clearly reflects real responsibility.
 
@@ -299,6 +304,8 @@ Examples:
 - `Assets/_Project/UI/Screens/MainMenu`
 - `Assets/_Project/Gameplay/RaceFlow`
 - `Assets/_Project/Gameplay/Finish`
+- `Assets/_Project/Gameplay/Bike/Controllers`
+- `Assets/_Project/Gameplay/Bike/View`
 
 Forbidden examples:
 - `main menu`
